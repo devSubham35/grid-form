@@ -3,21 +3,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useCallback, useMemo, useRef, useState } from "react";
 
-import {
-  ColDef,
-  ColDefField,
-  // GridTheme,
-  ModuleRegistry,
-  RowSelectedEvent,
-  RowSelectionOptions,
-} from "@ag-grid-community/core";
-// import { themeQuartz } from "ag-grid-community";
-import { AgGridReact } from "@ag-grid-community/react";
-import { CsvExportModule } from "@ag-grid-community/csv-export";
-import { ClientSideRowModelModule } from "@ag-grid-community/client-side-row-model";
 
-import "@ag-grid-community/styles/ag-grid.css";
-import "@ag-grid-community/styles/ag-theme-quartz.css";
+/// Theme
+import type { ColDef, RowSelectionOptions, RowSelectedEvent, ColDefField } from "ag-grid-community";
+import { AllCommunityModule, ClientSideRowModelModule, CsvExportModule, ModuleRegistry, themeQuartz } from "ag-grid-community";
+
+/// Core CSS
+import { AgGridReact } from "ag-grid-react";
 
 import _ from "lodash";
 import moment from "moment";
@@ -25,8 +17,8 @@ import moment from "moment";
 
 // Shadcn/UI Imports
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 
 // Custom Components (you'll need to create these)
@@ -40,7 +32,7 @@ import CustomPagination from "./CustomPagination";
 import jsonToExcel from "@/utils/jsonToExcel";
 import csvToJson from "@/utils/csvToJson";
 
-ModuleRegistry.registerModules([ClientSideRowModelModule, CsvExportModule]);
+ModuleRegistry.registerModules([ClientSideRowModelModule, CsvExportModule, AllCommunityModule]);
 
 export enum BaseDataStatus {
   Active = "Active",
@@ -192,6 +184,9 @@ const AdvancedDataTable = <T extends BaseDataType>({
         checkboxSelection: isSelectable,
         headerCheckboxSelection: isSelectable,
         flex: internalFlex[header as string] ?? 1,
+        cellRendererParams: {
+          suppressFocus: true, // Prevents focus on checkbox
+        },
         cellRenderer: isRenderable
           ? (props: { data: T }) => render[header]?.(props.data)
           : isInternalRenderable
@@ -302,6 +297,20 @@ const AdvancedDataTable = <T extends BaseDataType>({
     headerCheckbox: true,
   };
 
+  const customTheme = themeQuartz.withParams({
+    spacing: 12,
+    accentColor: "var(--foreground)", 
+    textColor: "var(--color-foreground)",
+    backgroundColor: "var(--color-background)",
+    borderColor: "var(--color-border)",
+    checkboxUncheckedBorderColor: "var(--color-border)",
+    checkboxCheckedBorderColor: "transparent",
+    oddRowBackgroundColor: "var(--color-secondary)",
+    selectedRowBackgroundColor: "var(--color-secondary)" 
+  });
+  
+
+
   return (
     <div className="w-full h-full">
       <div className="flex items-center flex-wrap gap-2 justify-between mb-4">
@@ -357,14 +366,13 @@ const AdvancedDataTable = <T extends BaseDataType>({
           )}
         </div>
       </div>
-      <div className="ag-theme-alpine w-full h-full">
+      <div className="h-full">
         <AgGridReact<T>
           ref={gridRef}
           rowData={data}
           columnDefs={columnDefs}
           defaultColDef={defaultColDef}
           rowSelection={rowSelection}
-          // suppressRowClickSelection={true}
           suppressCellFocus={true}
           rowHeight={50}
           onRowSelected={handleRowSelection}
@@ -372,7 +380,7 @@ const AdvancedDataTable = <T extends BaseDataType>({
           paginationPageSize={50}
           suppressPaginationPanel={true}
           localeText={{ noRowsToShow: "No data found" }}
-          className="ag-theme-quartz bg-transparent"
+          theme={customTheme}
         />
       </div>
 

@@ -155,3 +155,21 @@
 .animate-shadow {
   animation: shadow 0.5s linear infinite;
 }
+
+
+
+
+.ag-cell-focus,
+.ag-cell-no-focus {
+  border: 1px solid transparent !important;
+}
+
+::ng-deep .ag-cell:focus {
+  border: 1px solid transparent !important;
+  outline: none;
+}
+
+.ag-checkbox-input-wrapper {
+  outline: none !important;
+  box-shadow: none !important;
+}
