@@ -28,7 +28,7 @@ axiosInstance.interceptors.response.use(
   (res: AxiosResponse) => {
     
     if (res.config.showNotification) {
-      if (res.status == 200) {
+      if (res.status === 200 || res.status === 201) {
         globalCatchSucess(res);
       } else {
         globalCatchWarning(res?.data?.message);

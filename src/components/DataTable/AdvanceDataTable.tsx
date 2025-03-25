@@ -313,7 +313,7 @@ const AdvancedDataTable = <T extends BaseDataType>({
           }}
           className="px-2"
         >
-          <TabsList>
+          <TabsList className="bg-transparent">
             <TabsTrigger value="">All</TabsTrigger>
             {isStatus && <TabsTrigger value="Active">Active</TabsTrigger>}
             {isStatus && <TabsTrigger value="Inactive">Inactive</TabsTrigger>}
@@ -372,7 +372,7 @@ const AdvancedDataTable = <T extends BaseDataType>({
           paginationPageSize={50}
           suppressPaginationPanel={true}
           localeText={{ noRowsToShow: "No data found" }}
-          className="ag-theme-quartz"
+          className="ag-theme-quartz bg-transparent"
         />
       </div>
 

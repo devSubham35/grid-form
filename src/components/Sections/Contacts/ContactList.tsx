@@ -1,7 +1,9 @@
 import React, { useState } from 'react'
 import { useQuery } from '@tanstack/react-query';
+import Loading from '@/components/Loader/Loading';
 import { contactList } from '@/api/functions/contact/contact.api';
 import AdvancedDataTable from '@/components/DataTable/AdvanceDataTable'
+import PageWrapper from '@/components/Wrapper/PageWrapper';
 
 const ContactList = () => {
 
@@ -9,6 +11,7 @@ const ContactList = () => {
   const [status, setStatus] = useState("");
   const [search, setSearch] = useState("");
   const [pageSize, setPageSize] = useState(1);
+
   console.log(search, "++66")
 
 
@@ -79,51 +82,53 @@ const ContactList = () => {
   /////////////////////////////////////////////////////
 
   if (isLoading || !data) {
-    return <h1 className='w-full h-screen flex justify-center in-checked: font-bold text-5xl'>Loading....</h1>
+    return <Loading />
   }
 
   return (
-    <div className='w-full h-[70vh] p-10'>
-      <AdvancedDataTable
-        data={data?.data?.docs || []}
-        onPageSizeChange={handlePageSizeChange}
-        pageSize={pageSize}
-        onPageChange={handlePageChnage}
-        currentPage={page}
-        totalPages={data.data?.totalPages}
-        totalCount={data.data.pagingCounter}
-        setStatusFilter={handleFilter}
-        currentStatus={status}
-        handleSearchItem={hanldeSearch}
-        hiddenColumnKeys={[
-          "createdAt", "_id", "_organizations", "id", "__v", "updatedAt"
-        ]}
-        // selectableColumnKey="name"
-        exportedColumnKeys={[
-          "name",
-          "email",
-          "phone",
-          "status",
-        ]}
-        exportFileName="contact-list-data"
-        onStatusChange={(data) => handleStatusChange(data._id)}
-        onDelete={(data) => handleDelete(data._id)}
-        onEdit={(data) => handleEdit(data._id)}
-        onBulkDelete={(dataList) =>
-          handleBulkDelete(dataList.map((data) => data._id))
-        }
-        isAssign={false}
-        idDelete={true}
-        isStatus={true}
-        isEdit={true}
-        isView={false}
-        isCsv={true}
-        // columnNames={{
-        //   _organizations: "Organizations"
-        // }}
-        selectedAccess={""}
-      />
-    </div>
+    <PageWrapper>
+      <div className='w-full h-[70vh]'>
+        <AdvancedDataTable
+          data={data?.data?.docs || []}
+          onPageSizeChange={handlePageSizeChange}
+          pageSize={pageSize}
+          onPageChange={handlePageChnage}
+          currentPage={page}
+          totalPages={data.data?.totalPages}
+          totalCount={data.data.pagingCounter}
+          setStatusFilter={handleFilter}
+          currentStatus={status}
+          handleSearchItem={hanldeSearch}
+          hiddenColumnKeys={[
+            "createdAt", "_id", "_organizations", "id", "__v", "updatedAt"
+          ]}
+          // selectableColumnKey="name"
+          exportedColumnKeys={[
+            "name",
+            "email",
+            "phone",
+            "status",
+          ]}
+          exportFileName="contact-list-data"
+          onStatusChange={(data) => handleStatusChange(data._id)}
+          onDelete={(data) => handleDelete(data._id)}
+          onEdit={(data) => handleEdit(data._id)}
+          onBulkDelete={(dataList) =>
+            handleBulkDelete(dataList.map((data) => data._id))
+          }
+          isAssign={false}
+          idDelete={true}
+          isStatus={true}
+          isEdit={true}
+          isView={false}
+          isCsv={true}
+          // columnNames={{
+          //   _organizations: "Organizations"
+          // }}
+          selectedAccess={""}
+        />
+      </div>
+    </PageWrapper>
   )
 }
 
